@@ -1,0 +1,48 @@
+from flask import Flask, request, jsonify 
+
+#flask era para poder interactuar con APIS
+
+app = Flask(__name__) #ninicia el servidor
+
+#lista de pokemones
+pokemons = [
+    {"id": 1, "name": "Bulbasaur", "type": "Grass/Poison"},
+    {"id": 2, "name": "Charmander", "type": "Fire"},
+    {"id": 3, "name": "Squirtle", "type": "Water"}
+]
+
+@app.route("/")
+#ejecutar esa funcion en API 
+def inicio():
+    return {"mensaje": "Bienvenida a tu API de Pokémon"}
+#una funcion donde se mostrara un mensaje de inicio, en la pagina 
+
+# GET - obtener todos los pokemones
+@app.route("/pokemons", methods=["GET"])
+#mostrar la lista de pokemones 
+def get_pokemons(): #creamos una funcion para transformar los datos de los pokemones el JSON
+    return jsonify(pokemons)
+
+# GET - obtener un pokemon por ID
+@app.route("/pokemons/<int:pokemon_id>", methods=["GET"])
+#recibira un entero para mostrar el pokemon 
+def get_pokemon(pokemon_id):
+    for p in pokemons: 
+        if p["id"] == pokemon_id:
+            return jsonify(p)
+    return {"error": "Pokémon no encontrado"}, 404
+#esta funcion es para buscar dentro de la lista, el error 404 es no encontrado 
+#es para 
+
+# POST - agregar un nuevo pokemon
+@app.route("/pokemons", methods=["POST"])
+
+def add_pokemon():
+    nuevo = request.get_json()  #lee los datos en forma de JSON
+    pokemons.append(nuevo)#y los agrega a la lista de pokemons 
+    return {"mensaje": "Pokémon agregado", "data": nuevo}, 201
+#esta funcion es para crear dentro de la API
+
+if __name__ == "__main__":
+    app.run(debug=True)
+    #arranca el servidor
