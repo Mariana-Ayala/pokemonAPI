@@ -39,11 +39,14 @@ def get_pokemon(pokemon_id):
 @app.route("/pokemons", methods=["POST"])
 def add_pokemon():
     nuevo = request.get_json()  #lee los datos en forma de JSON
+    #Se verifica que no se repita el ID
     for p in pokemons:
         if p["id"] == nuevo["id"]:
             return{"error" : "El pokemon ya existe "},400
+    #se verifica que los atributos si sean del tipo establecido
+    #Se comparan si son del tipo 
     if isinstance(nuevo["id"],int) and isinstance(nuevo["name"],str) and isinstance(nuevo["type"],str):
-        pokemons.append(nuevo)
+        pokemons.append(nuevo) #si son del tipo se agregan al diccionario
         return{"mensaje":"pokemon agregado correctamente"},201
     else :
         return{"Error":"No se puede agregar el pokemon"},401
