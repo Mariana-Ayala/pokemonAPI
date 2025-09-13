@@ -31,7 +31,7 @@ def get_pokemon(pokemon_id):
     for p in pokemons: 
         if p["id"] == pokemon_id:
             return jsonify(p)
-    return {"error": "Pokémon no encontrado"}, 404
+    return {"error": "Pokemon no encontrado"}, 404
 #esta funcion es para buscar dentro de la lista, el error 404 es no encontrado 
 #es para buscar un pokemon con su ID
 
@@ -39,8 +39,14 @@ def get_pokemon(pokemon_id):
 @app.route("/pokemons", methods=["POST"])
 def add_pokemon():
     nuevo = request.get_json()  #lee los datos en forma de JSON
-    pokemons.append(nuevo)#y los agrega a la lista de pokemons 
-    return {"mensaje": "Pokémon agregado", "data": nuevo}, 201
+    for p in pokemons:
+        if p["id"] == nuevo["id"]:
+            return{"error" : "El pokemon ya existe "},400
+    if isinstance(nuevo["id"],int) and isinstance(nuevo["name"],str) and isinstance(nuevo["type"],str):
+        pokemons.append(nuevo)
+        return{"mensaje":"pokemon agregado correctamente"},201
+    else :
+        return{"Error":"No se puede agregar el pokemon"},401
 #esta funcion es para crear dentro de la API
 
 @app.route("/pokemons/<int:pokemon_id>", methods=["DELETE"])
@@ -48,7 +54,7 @@ def delete_pokemon(pokemon_id):
     for p in pokemons:
         if p["id"] == pokemon_id:
             pokemons.remove(p)
-            return{"pokemon eliminado correctamente "},200
+            return{"mensaje":"pokemon eliminado correctamente "},200
     return{"Error": "Pokemon no encontrado"},404
 
 if __name__ == "__main__":
