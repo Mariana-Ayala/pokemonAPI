@@ -43,8 +43,8 @@ def add_pokemon():
     for p in pokemons:
         if p["id"] == nuevo["id"]:
             return{"error" : "El pokemon ya existe "},400
+    #si el id no existe entonces
     #se verifica que los atributos si sean del tipo establecido
-    #Se comparan si son del tipo 
     if isinstance(nuevo["id"],int) and isinstance(nuevo["name"],str) and isinstance(nuevo["type"],str):
         pokemons.append(nuevo) #si son del tipo se agregan al diccionario
         return{"mensaje":"pokemon agregado correctamente"},201
@@ -59,6 +59,20 @@ def delete_pokemon(pokemon_id):
             pokemons.remove(p)
             return{"mensaje":"pokemon eliminado correctamente "},200
     return{"Error": "Pokemon no encontrado"},404
+
+@app.route("/pokemons/<int:pokemon_id>",methods=["PUT"])
+def update_pokemon(pokemon_id):
+    actualizar = request.get_json()
+    for p in pokemons:
+        if p["id"] == pokemon_id:
+            if "name" in actualizar and isinstance(actualizar["name"],str):
+                p["name"] = actualizar["name"]
+            if "type" in actualizar and isinstance(actualizar["type"],str):
+                p["type"] = actualizar["type"]
+    
+            return{"Mensaje":"El pokemon fue actualizado correctamente","data":p},200
+    return{"Error":"Pokemon no ecnontrado"},404
+        
 
 if __name__ == "__main__":
     app.run(debug=True)
