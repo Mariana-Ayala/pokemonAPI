@@ -63,15 +63,20 @@ def delete_pokemon(pokemon_id):
 @app.route("/pokemons/<int:pokemon_id>",methods=["PUT"])
 def update_pokemon(pokemon_id):
     actualizar = request.get_json()
+    #recibe los datos en forma de json
     for p in pokemons:
         if p["id"] == pokemon_id:
+            #se busca el id en la lista de pokemones
             if "name" in actualizar and isinstance(actualizar["name"],str):
+                #si no se coloca nada en name entonces se queda con lo que tenia 
+                #si se coloca algo se verifica que sea del mismo tipo 
                 p["name"] = actualizar["name"]
             if "type" in actualizar and isinstance(actualizar["type"],str):
                 p["type"] = actualizar["type"]
-    
             return{"Mensaje":"El pokemon fue actualizado correctamente","data":p},200
+            #Se devuelve un pokemon actualizado en la respuestas 
     return{"Error":"Pokemon no ecnontrado"},404
+    #si no existe un pokemon se regresa un error 
         
 
 if __name__ == "__main__":
